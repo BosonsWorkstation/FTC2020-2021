@@ -2,27 +2,31 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 public abstract class AbstractSensorTest extends LinearOpMode {
 
     DcMotor leftMotor;
     DcMotor     rightMotor;
+    Servo clawArm;
     protected void initialize(){
         leftMotor = hardwareMap.dcMotor.get("Left Wheel");
         rightMotor = hardwareMap.dcMotor.get("Right Wheel");
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
+        clawArm = hardwareMap.servo.get("Claw Arm");
         this.initializeSensor();
     }
 
 
-    protected void drive(double power){
+    protected void drive(){
 
-        leftMotor.setPower(power);
-        rightMotor.setPower(power);
+        leftMotor.setPower(.75);
+        rightMotor.setPower(.75);
 
     }
     protected void stopMotors(){
-        this.drive(0.0);
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
 
     }
 
@@ -45,19 +49,22 @@ public abstract class AbstractSensorTest extends LinearOpMode {
 
         waitForStart();
 
-
+        drive();
 
 
         telemetry.addData("Mode", "running");
         telemetry.update();
 
-        this.drive(0.75);
+
 
         resetStartTime();
+
         // drive until touch sensor button pressed or 5 seconds passes.
 
         waitForSensor();
-        this.stopMotors();
+        idle();
+        clawArm.setPosition(10);
+        clawArm.setPosition(10);
 
 
     }

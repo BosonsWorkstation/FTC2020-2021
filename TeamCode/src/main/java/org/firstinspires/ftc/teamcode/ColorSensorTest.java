@@ -10,7 +10,7 @@ public class ColorSensorTest extends AbstractSensorTest {
 
     @Override
     void initializeSensor(){
-        colorSensor = hardwareMap.colorSensor.get("Color_Sensor");
+        colorSensor = hardwareMap.colorSensor.get("Color Sensor");
 
     }
 
