@@ -20,8 +20,8 @@ public abstract class AbstractSensorTest extends LinearOpMode {
 
     protected void drive(){
 
-        leftMotor.setPower(.75);
-        rightMotor.setPower(.75);
+        leftMotor.setPower(-.75);
+        rightMotor.setPower(-.75);
 
     }
     protected void stopMotors(){
