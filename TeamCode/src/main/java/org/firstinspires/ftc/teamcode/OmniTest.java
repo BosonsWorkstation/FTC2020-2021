@@ -46,10 +46,9 @@ public class OmniTest extends LinearOpMode{
 
                 }
             }
-            if(Math.abs(xval)>0.1){
-                if (xval > 0){
-                    this.driveTrain.turn(xval, direction);
-                }
+            if(Math.abs(xval2)>0.1){
+                direction = xval2 > 0 ? 1 : -1;
+                this.driveTrain.turn(xval2, direction);
             }
 //            } else if (Math.abs(xval) > 0.1 || Math.abs(yval) > 0.1){
 //                if (yval > 0) {
