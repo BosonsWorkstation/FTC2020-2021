@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.Servo;
-
+@Autonomous(name="AutonomousTest", group="Linear OpMode")
 
 public abstract class AutonomousTest extends LinearOpMode {
 
@@ -61,7 +62,7 @@ public abstract class AutonomousTest extends LinearOpMode {
 
             this.drive(0.75);
 
-            resetStartTime();
+
             // drive until touch sensor button pressed or 5 seconds passes.
             waitForSensor();
             idle();

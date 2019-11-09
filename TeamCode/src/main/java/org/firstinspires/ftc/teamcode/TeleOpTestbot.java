@@ -11,23 +11,25 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 @TeleOp(name = "Testbot TeleOp", group = "Linear Opmode")
-public class TeleOpTestbot extends LinearOpMode {
+public class TeleOpTestbot extends LinearOpMode{
     private DcMotor rightWheel;
     private DcMotor leftWheel;
-    private Servo clawArm;
+    private DcMotor clawArm;
+    private Servo pickerUpper;
+
     private ElapsedTime runtime = new ElapsedTime();
 
     @Override
-    public void runOpMode() {
+    public void runOpMode()   throws InterruptedException {
         telemetry.addData("Status", "Initializing");
         telemetry.update();
 
         rightWheel = hardwareMap.dcMotor.get("Right Wheel");
         leftWheel = hardwareMap.dcMotor.get("Left Wheel");
-        clawArm = hardwareMap.servo.get("Claw Arm");
+        clawArm = hardwareMap.dcMotor.get("Claw Arm");
+        pickerUpper = hardwareMap.servo.get("Claw");
 
-        leftWheel.setDirection(DcMotor.Direction.FORWARD);
-        rightWheel.setDirection(DcMotor.Direction.REVERSE);
+        leftWheel.setDirection(DcMotor.Direction.REVERSE);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -37,29 +39,47 @@ public class TeleOpTestbot extends LinearOpMode {
         double leftPower = 0.0;
         double rightPower = 0.0;
         double clawUpPower = 0.0;
+
         while (opModeIsActive()) {
             double drive = -gamepad1.left_stick_y;
             double turn = -gamepad1.right_stick_x;
 
 
-            leftPower = Range.clip(drive + turn, -1, 1);
-            rightPower = Range.clip(drive - turn, -1, 1);
+            leftPower = Range.clip(drive - turn, -1, 1);
+            rightPower = Range.clip(drive + turn, -1, 1);
             leftWheel.setPower(leftPower);
             rightWheel.setPower(rightPower);
+            clawArm.setPower(clawUpPower);
 
             //servo
-            if (gamepad1.y) {
-                clawArm.setPosition(-10.0);
-            } else if (gamepad1.a) {
-                clawArm.setPosition(10.0);
+            if(gamepad1.dpad_up) {
+                clawUpPower = 0.5;
+            }
+            if(gamepad1.dpad_down){
+                clawUpPower = -0.5;
+            }
+
+            if(clawUpPower > 0 || clawUpPower < 0){
+                if (!gamepad1.dpad_up && !gamepad1.dpad_down){
+                    clawUpPower = 0;
+                }
+
+
+            }
+            if (gamepad2.dpad_up) {
+                pickerUpper.setPosition(0.8);
+            }
+            if (gamepad2.dpad_down) {
+                pickerUpper.setPosition(0);
             }
             telemetry.addData("Target Power", rightPower);
             telemetry.addData("Target Power", leftPower);
             telemetry.addData("Motor Power", rightWheel.getPower());
             telemetry.addData("Motor Power", leftWheel.getPower());
-            telemetry.addData("Servo Position", clawArm.getPosition());
+            telemetry.addData("Servo Position", pickerUpper.getPosition());
             telemetry.addData("runtime", runtime.toString());
             telemetry.addData("Status", "Running");
+            telemetry.update();
         }
         }
     }
