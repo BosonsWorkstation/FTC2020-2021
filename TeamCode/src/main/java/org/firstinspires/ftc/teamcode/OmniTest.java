@@ -30,25 +30,29 @@ public class OmniTest extends LinearOpMode{
             double yval = gamepad1.left_stick_y;
 
             double xval2 = gamepad1.right_stick_x;
-            int direction = 1;
+            int directionFB;
+            int directionCrab;
+            int directionTurn;
             if(Math.abs(yval) < 0.1 && Math.abs(xval) < 0.1) {
                 this.driveTrain.stop();
 
             } else if (Math.abs(xval)>0.1 || Math.abs(yval)>0.1) {
                 if ((xval != 0 && Math.abs(yval) > 0) || Math.abs(yval / xval) > 0.5) {
                     telemetry.addData("Move Forward/back", yval);
-                    direction = yval > 0 ? 1 : -1;
-                    this.driveTrain.move(yval, direction);
+                    directionFB = yval > 0 ? 1 : -1;
+                    this.driveTrain.move(yval, directionFB);
                 } else if (Math.abs(xval) > 0) {
                     telemetry.addData("Move Sideways", xval);
-                    direction = xval > 0 ? 1 : -1;
-                    this.driveTrain.crab(xval, direction);
+                    directionCrab = xval > 0 ? 1 : -1;
+                    this.driveTrain.crab(xval2, directionCrab);
 
                 }
             }
             if(Math.abs(xval)>0.1){
                 if (xval > 0){
-                    this.driveTrain.turn(xval, direction);
+                    telemetry.addData("Turn", xval2);
+                    directionTurn = xval2 > 0 ? 1 : -1;
+                    this.driveTrain.turn(xval, directionTurn);
                 }
             }
 //            } else if (Math.abs(xval) > 0.1 || Math.abs(yval) > 0.1){

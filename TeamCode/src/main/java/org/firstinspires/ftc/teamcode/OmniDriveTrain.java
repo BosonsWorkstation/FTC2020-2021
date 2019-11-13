@@ -44,9 +44,9 @@ public void stop(){
 
 
 
-    public void move(double power, int direction){
+    public void move(double power, int directionFB){
 
-        if (direction > 0){
+        if (directionFB > 0){
             telemetry.addData("Moving Forward: ", power);
             telemetry.addData("Motor Power", frontRightWheel.getPower());
             telemetry.addData("Motor Power", frontLeftWheel.getPower());
@@ -61,7 +61,7 @@ public void stop(){
 
         }
 
-        if (direction < 0){
+        if (directionFB < 0){
             frontRightWheel.setDirection(DcMotorSimple.Direction.FORWARD);
             backRightWheel.setDirection(DcMotorSimple.Direction.FORWARD);
 
@@ -76,9 +76,9 @@ public void stop(){
 
     }
 
-    public void turn(double power, int direction){
+    public void turn(double power, int directionTurn){
 
-        if (direction == 1){
+        if (directionTurn == 1){
             //right turn
             frontRightWheel.setDirection(DcMotorSimple.Direction.FORWARD);
             frontLeftWheel.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -86,7 +86,7 @@ public void stop(){
             backLeftWheel.setDirection(DcMotorSimple.Direction.FORWARD);
 
         }
-        if (direction == -1) {
+        if (directionTurn == -1) {
             //left turn
             frontRightWheel.setDirection(DcMotorSimple.Direction.REVERSE);
             frontLeftWheel.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -99,9 +99,9 @@ public void stop(){
 
     }
 
-    public void crab(double power, int direction){
+    public void crab(double power, int directionCrab){
 
-        if (direction > 0){
+        if (directionCrab > 0){
             telemetry.addData("Moving Forward: ", power);
             telemetry.addData("Motor Power", frontRightWheel.getPower());
             telemetry.addData("Motor Power", frontLeftWheel.getPower());
@@ -116,7 +116,7 @@ public void stop(){
 
         }
 
-        if (direction < 0){
+        if (directionCrab < 0){
             frontLeftWheel.setDirection(DcMotorSimple.Direction.FORWARD);
             frontRightWheel.setDirection(DcMotorSimple.Direction.FORWARD);
 
