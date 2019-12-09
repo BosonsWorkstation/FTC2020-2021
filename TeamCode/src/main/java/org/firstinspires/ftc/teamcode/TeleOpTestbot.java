@@ -24,10 +24,11 @@ public class TeleOpTestbot extends LinearOpMode{
         telemetry.addData("Status", "Initializing");
         telemetry.update();
 
-        rightWheel = hardwareMap.dcMotor.get("Right Wheel");
-        leftWheel = hardwareMap.dcMotor.get("Left Wheel");
+        rightWheel = hardwareMap.dcMotor.get("Back Right Wheel");
+        leftWheel = hardwareMap.dcMotor.get("Front Left Wheel");
+
         clawArm = hardwareMap.dcMotor.get("Claw Arm");
-        pickerUpper = hardwareMap.servo.get("Claw");
+//        pickerUpper = hardwareMap.servo.get("Claw");
 
         leftWheel.setDirection(DcMotor.Direction.REVERSE);
 
@@ -67,18 +68,18 @@ public class TeleOpTestbot extends LinearOpMode{
 
             }
             if (gamepad2.dpad_up) {
-                pickerUpper.setPosition(0.8);
+                clawArm.setPower(0.5);
             }
             if (gamepad2.dpad_down) {
-                pickerUpper.setPosition(0);
+                clawArm.setPower(0.5);
             }
-            telemetry.addData("Target Power", rightPower);
-            telemetry.addData("Target Power", leftPower);
-            telemetry.addData("Motor Power", rightWheel.getPower());
-            telemetry.addData("Motor Power", leftWheel.getPower());
-            telemetry.addData("Servo Position", pickerUpper.getPosition());
-            telemetry.addData("runtime", runtime.toString());
-            telemetry.addData("Status", "Running");
+//            telemetry.addData("Target Power", rightPower);
+//            telemetry.addData("Target Power", leftPower);
+//            telemetry.addData("Motor Power", rightWheel.getPower());
+//            telemetry.addData("Motor Power", leftWheel.getPower());
+////            telemetry.addData("Servo Position", pickerUpper.getPosition());
+//            telemetry.addData("runtime", runtime.toString());
+//            telemetry.addData("Status", "Running");
             telemetry.update();
         }
         }

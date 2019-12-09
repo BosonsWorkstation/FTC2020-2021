@@ -1,44 +1,70 @@
 package org.firstinspires.ftc.teamcode;
-import android.provider.FontRequest;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 
 public class OmniDriveTrain{
-    private DcMotor backRightWheel;
-    private DcMotor backLeftWheel;
-    private DcMotor frontRightWheel;
-    private DcMotor frontLeftWheel;
+    protected DcMotor backRightWheel;
+    protected DcMotor backLeftWheel;
+    protected DcMotor frontRightWheel;
+    protected DcMotor frontLeftWheel;
 
+    private BNO055IMU imu;
     private double lastPower = 0;
     private static final double INCREMENT = 0.1;
     private static final double MIN_DIFF = 0.2;
-
+    private static final double MAX_POWER = 0.5;
     private Telemetry telemetry;
 
     public OmniDriveTrain(HardwareMap  hardwareMap, Telemetry telemetry){
-        this.backLeftWheel = hardwareMap.dcMotor.get("Back Left Wheel");
-        this.backRightWheel = hardwareMap.dcMotor.get("Back Right Wheel");
-        this.frontLeftWheel = hardwareMap.dcMotor.get("Front Left Wheel");
-        this.frontRightWheel = hardwareMap.dcMotor.get("Front Right Wheel");
         this.telemetry = telemetry;
+        this.initializeGyro(hardwareMap,telemetry);
+        this.initializeMotors(hardwareMap,telemetry);
     }
 
+    public void initializeMotors(HardwareMap hardwareMap, Telemetry telemetry){
+        this.backLeftWheel = hardwareMap.dcMotor.get("Back_Left_Wheel");
+        this.backRightWheel = hardwareMap.dcMotor.get("Back_Right_Wheel");
+        this.frontLeftWheel = hardwareMap.dcMotor.get("Front_Left_Wheel");
+        this.frontRightWheel = hardwareMap.dcMotor.get("Front_Right_Wheel");
+    }
+
+    public void initializeGyro(HardwareMap hardwareMap, Telemetry telemetry){
+
+        this.imu = hardwareMap.get(BNO055IMU.class, "imu");
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+
+        parameters.mode = BNO055IMU.SensorMode.IMU;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.loggingEnabled = false;
+
+        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+        // and named "imu".
+
+        imu.initialize(parameters);
+    }
+
+
 public void stop(){
+
+    while (lastPower > .1) {
+        turnMotors(lastPower - INCREMENT);
+    }
+
     frontRightWheel.setPower(0);
     frontLeftWheel.setPower(0);
     backRightWheel.setPower(0);
     backLeftWheel.setPower(0);
+    lastPower = 0;
 }
 
 
@@ -99,6 +125,8 @@ public void stop(){
 
     }
 
+
+
     public void crab(double power, int directionCrab){
 
         if (directionCrab > 0){
@@ -135,26 +163,61 @@ public void stop(){
 This function only sets the POWER of the motors, each method needs to DECLARE THE
 DIRECTIONS OF THE MOTORS in order for the robot to do the intended movement
      */
+//    public void turnMotors(double power){
+//
+//
+//
+//        if(Math.abs(power) > MAX_POWER) {
+//            power = power > 0 ? MAX_POWER : -MAX_POWER;
+//        }
+//
+//        double powerDiff = power - lastPower;
+//        double usePower;
+//
+//        if (Math.abs(powerDiff) > MIN_DIFF) {
+//                usePower =  power > lastPower ? lastPower + INCREMENT : lastPower - INCREMENT;
+//
+//        } else {
+//            usePower = power;
+//        }
+//
+//        lastPower = usePower;
+//
+//        usePower = Math.abs(usePower);
+//        frontRightWheel.setPower(usePower);
+//        frontLeftWheel.setPower(usePower);
+//        backRightWheel.setPower(usePower);
+//        backLeftWheel.setPower(usePower);
+//        telemetry.addData("Use Power:", usePower);
+//        telemetry.update();
+//    }
+
+
     public void turnMotors(double power){
 
-        double powerDiff = power - lastPower;
-        double usePower;
+        double usePower = Math.abs(power);
+
+        double powerDiff = usePower - lastPower;
 
         if (Math.abs(powerDiff) > MIN_DIFF) {
-                usePower =  power > lastPower ? lastPower + INCREMENT : lastPower - INCREMENT;
+            usePower =  usePower > lastPower ? lastPower + INCREMENT : lastPower - INCREMENT;
+            if(usePower < 0){
+                usePower = 0;
+            }
+        }
 
-        } else {
-            usePower = power;
+        if(usePower > MAX_POWER){
+            usePower = MAX_POWER;
         }
 
         lastPower = usePower;
 
-        usePower = Math.abs(usePower);
         frontRightWheel.setPower(usePower);
         frontLeftWheel.setPower(usePower);
         backRightWheel.setPower(usePower);
         backLeftWheel.setPower(usePower);
-
+        telemetry.addData("Use Power:", usePower);
+        telemetry.update();
     }
 }
 
