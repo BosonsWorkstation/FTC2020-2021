@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -15,18 +16,29 @@ public class OmniDriveTrain{
     protected DcMotor backLeftWheel;
     protected DcMotor frontRightWheel;
     protected DcMotor frontLeftWheel;
+//    protected Servo leveler;
 
     private BNO055IMU imu;
     private double lastPower = 0;
     private static final double INCREMENT = 0.1;
-    private static final double MIN_DIFF = 0.2;
+    private static final double MIN_DIFF = 0.05;
     private static final double MAX_POWER = 0.5;
-    private Telemetry telemetry;
+    protected Telemetry telemetry;
+    private Telemetry.Item leftFrontTelemetry;
+    private Telemetry.Item rightFrontTelemetry;
+    private Telemetry.Item leftBackTelemetry;
+    private Telemetry.Item rightBackTelemetry;
+    private Telemetry.Item usePowerTelemetry;
 
     public OmniDriveTrain(HardwareMap  hardwareMap, Telemetry telemetry){
         this.telemetry = telemetry;
         this.initializeGyro(hardwareMap,telemetry);
         this.initializeMotors(hardwareMap,telemetry);
+        this.leftFrontTelemetry = telemetry.addData("LF Power", 0);
+        this.rightFrontTelemetry = telemetry.addData("RF Power", 0);
+        this.leftBackTelemetry = telemetry.addData("LF Power", 0);
+        this.rightBackTelemetry = telemetry.addData("RB Power", 0);
+        this.usePowerTelemetry = telemetry.addData("usePower", 0);
     }
 
     public void initializeMotors(HardwareMap hardwareMap, Telemetry telemetry){
@@ -34,6 +46,7 @@ public class OmniDriveTrain{
         this.backRightWheel = hardwareMap.dcMotor.get("Back_Right_Wheel");
         this.frontLeftWheel = hardwareMap.dcMotor.get("Front_Left_Wheel");
         this.frontRightWheel = hardwareMap.dcMotor.get("Front_Right_Wheel");
+//        this.leveler = hardwareMap.servo.get("Leveler");
     }
 
     public void initializeGyro(HardwareMap hardwareMap, Telemetry telemetry){
@@ -59,7 +72,6 @@ public void stop(){
     while (lastPower > .1) {
         turnMotors(lastPower - INCREMENT);
     }
-
     frontRightWheel.setPower(0);
     frontLeftWheel.setPower(0);
     backRightWheel.setPower(0);
@@ -67,17 +79,30 @@ public void stop(){
     lastPower = 0;
 }
 
+    public void stopNow(){
+        frontRightWheel.setPower(0);
+        frontLeftWheel.setPower(0);
+        backRightWheel.setPower(0);
+        backLeftWheel.setPower(0);
+        lastPower = 0;
+    }
 
 
 
     public void move(double power, int directionFB){
 
+
+
         if (directionFB > 0){
             telemetry.addData("Moving Forward: ", power);
             telemetry.addData("Motor Power", frontRightWheel.getPower());
-            telemetry.addData("Motor Power", frontLeftWheel.getPower());
-            telemetry.addData("Motor Power", backRightWheel.getPower());
-            telemetry.addData("Motor Power", backLeftWheel.getPower());
+//            telemetry.addData("Motor Power", frontLeftWheel.getPower());
+            this.leftFrontTelemetry.setValue("%0.3f",frontLeftWheel.getPower());
+            this.rightFrontTelemetry.setValue("%0.3f",frontRightWheel.getPower());
+            this.leftBackTelemetry.setValue("%0.3f", backLeftWheel.getPower());
+            this.rightBackTelemetry.setValue("%0.3f", backRightWheel.getPower());
+//            telemetry.addData("Motor Power", backRightWheel.getPower());
+//            telemetry.addData("Motor Power", backLeftWheel.getPower());
 
             frontRightWheel.setDirection(DcMotorSimple.Direction.REVERSE);
             backRightWheel.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -97,8 +122,6 @@ public void stop(){
 
         }
         this.turnMotors(power);
-
-
 
     }
 
@@ -216,8 +239,13 @@ DIRECTIONS OF THE MOTORS in order for the robot to do the intended movement
         frontLeftWheel.setPower(usePower);
         backRightWheel.setPower(usePower);
         backLeftWheel.setPower(usePower);
-        telemetry.addData("Use Power:", usePower);
-        telemetry.update();
+        usePowerTelemetry.setValue("%0.3f",usePower);
+
     }
+//    public void moveLeveler(double levelerPower, int directionLeveler){
+//        if (directionLeveler >0){
+//            double useLevelerPower = Math.abs(levelerPower);
+//        }
+//    }
 }
 

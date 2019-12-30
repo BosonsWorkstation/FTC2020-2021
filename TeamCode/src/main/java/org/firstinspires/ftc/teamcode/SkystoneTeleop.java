@@ -17,11 +17,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import android.graphics.drawable.GradientDrawable;
 
 
-@TeleOp(name = "Omni Driving Test", group = "Linear Opmode")
-public class OmniTest extends LinearOpMode{
+@TeleOp(name = "SkyStone Teleop", group = "Linear Opmode")
+public class SkystoneTeleop extends LinearOpMode{
     private OmniDriveTrain driveTrain;
     private SkyStoneIntake intake;
-    private SkyStoneStacker blockArm;
+    private FoundationArm foundation;
+//    private SkyStoneStacker blockArm;
     BNO055IMU imu;
 
 
@@ -38,7 +39,8 @@ public class OmniTest extends LinearOpMode{
     public void runOpMode()   throws InterruptedException {
         this.driveTrain = new OmniDriveTrain(this.hardwareMap, this.telemetry);
         this.intake = new SkyStoneIntake(this.hardwareMap, this.telemetry);
-//        this.blackArm = new SkyStoneStacker(this.hardwareMap, this.telemetry);
+        this.foundation = new FoundationArm(this.hardwareMap, this.telemetry);
+//        this.blockArm = new SkyStoneStacker(this.hardwareMap, this.telemetry);
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
         parameters.mode = BNO055IMU.SensorMode.IMU;
@@ -49,6 +51,7 @@ public class OmniTest extends LinearOpMode{
         // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
         // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
         // and named "imu".
+
         imu = hardwareMap.get(BNO055IMU.class, "imu");
 
         imu.initialize(parameters);
@@ -74,11 +77,7 @@ public class OmniTest extends LinearOpMode{
 
             Heading currentHeading = this.getHeading();
 
-//            if(gamepad2.dpad_up) {
-//                this.intake.loading();
-//            }else if(gamepad2.dpad_down){
-//                this.intake.dumptruck();
-//            }
+//
 
 
 
@@ -93,16 +92,22 @@ public class OmniTest extends LinearOpMode{
                 telemetry.addData("Right Bumper Pressed", "False");
                 telemetry.update();
             }
-//
+
 //            if(gamepad2.dpad_up){
-//                blockArm.raiseSkyStone();
+//                this.blockArm.raiseSkyStone();
 //            } else if(gamepad2.dpad_down){
-//                blockArm.dropSkyStone();
+//                this.blockArm.dropSkyStone();
 //            }
-//
 
 
+            if (gamepad2.a){
+                this.foundation.foundationDown();
+            }
+            if (gamepad2.y){
+                this.foundation.foundationUp();
+            }
 
+            telemetry.addData("Servo Position", foundation.foundationArm.getPosition());
             telemetry.addData("Heading:", currentHeading.name());
 
             telemetry.update();
@@ -123,9 +128,9 @@ public class OmniTest extends LinearOpMode{
                     xval = -gamepad1.left_stick_x;
                     yval = -gamepad1.left_stick_y;
                     break;
-                    default:
-                     xval = gamepad1.left_stick_x;
-                     yval = gamepad1.left_stick_y;
+                default:
+                    xval = gamepad1.left_stick_x;
+                    yval = gamepad1.left_stick_y;
 
             }
 
@@ -146,10 +151,10 @@ public class OmniTest extends LinearOpMode{
                 }
             }
             if(Math.abs(xval2) > 0.1){
-                    telemetry.addData("Turn", xval2);
-                    telemetry.update();
-                    int directionTurn = xval2 > 0 ? 1 : -1;
-                    this.driveTrain.turn(xval2, directionTurn);
+                telemetry.addData("Turn", xval2);
+                telemetry.update();
+                int directionTurn = xval2 > 0 ? 1 : -1;
+                this.driveTrain.turn(xval2, directionTurn);
             }
 
 
@@ -180,6 +185,7 @@ public class OmniTest extends LinearOpMode{
         Orientation currentOrientation = imu.getAngularOrientation();
         telemetry.addData("Orientation:","x: %f; y: %f, z: %f",currentOrientation.firstAngle,currentOrientation.secondAngle,currentOrientation.thirdAngle);
         telemetry.update();
+
         Heading heading = Heading.NORTH;
 
         telemetry.addData("Angle:", currentOrientation.firstAngle);

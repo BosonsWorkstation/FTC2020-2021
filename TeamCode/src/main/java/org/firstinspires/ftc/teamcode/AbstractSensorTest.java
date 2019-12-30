@@ -3,32 +3,35 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 
 public abstract class AbstractSensorTest extends LinearOpMode {
 
-    DcMotor leftMotor;
-    DcMotor     rightMotor;
-    Servo clawArm;
-    protected void initialize(){
-        leftMotor = hardwareMap.dcMotor.get("Left Wheel");
-        rightMotor = hardwareMap.dcMotor.get("Right Wheel");
-        leftMotor.setDirection(DcMotor.Direction.REVERSE);
-        clawArm = hardwareMap.servo.get("Claw Arm");
-        this.initializeSensor();
-    }
+    int  touch;
+
+//    DcMotor leftMotor;
+//    DcMotor     rightMotor;
+//    Servo clawArm;
+//    protected void initialize(){
+//        leftMotor = hardwareMap.dcMotor.get("Left Wheel");
+//        rightMotor = hardwareMap.dcMotor.get("Right Wheel");
+//        leftMotor.setDirection(DcMotor.Direction.REVERSE);
+//        clawArm = hardwareMap.servo.get("Claw Arm");
+//        this.initializeSensor();
+//    }
 
 
-    protected void drive(){
-
-        leftMotor.setPower(-.75);
-        rightMotor.setPower(-.75);
-
-    }
-    protected void stopMotors(){
-        leftMotor.setPower(0);
-        rightMotor.setPower(0);
-
-    }
+//    protected void drive(){
+//
+//        leftMotor.setPower(-.75);
+//        rightMotor.setPower(-.75);
+//
+//    }
+//    protected void stopMotors(){
+//        leftMotor.setPower(0);
+//        rightMotor.setPower(0);
+//
+//    }
 
     abstract void waitForSensor();
     abstract void initializeSensor();
@@ -36,9 +39,8 @@ public abstract class AbstractSensorTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException
     {
-        this.initialize();
+//        this.initialize();
 
-//        touch = hardwareMap.touchSensor.get("Touch Sensor");
 
         telemetry.addData("Mode", "waiting");
         telemetry.update();
@@ -49,7 +51,7 @@ public abstract class AbstractSensorTest extends LinearOpMode {
 
         waitForStart();
 
-        drive();
+//        drive();
 
 
         telemetry.addData("Mode", "running");
@@ -63,8 +65,8 @@ public abstract class AbstractSensorTest extends LinearOpMode {
 
         waitForSensor();
         idle();
-        clawArm.setPosition(10);
-        clawArm.setPosition(10);
+//        clawArm.setPosition(10);
+//        clawArm.setPosition(10);
 
 
     }

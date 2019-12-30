@@ -2,10 +2,12 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+
+
 @Autonomous(name="Color Sensor Test", group="Linear OpMode")
 public class ColorSensorTest extends AbstractSensorTest {
 
-    ColorSensor colorSensor = null;
+    ColorSensor colorSensor;
 
 
     @Override
