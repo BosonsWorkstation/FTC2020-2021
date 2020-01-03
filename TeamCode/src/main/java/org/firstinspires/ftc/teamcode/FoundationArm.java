@@ -16,11 +16,11 @@ public class FoundationArm {
     }
 
     public void foundationDown(){
-        foundationArm.setPosition(-.5);
+        foundationArm.setPosition(0);
     }
 
     public void foundationUp(){
-        foundationArm.setPosition(.5);
+        foundationArm.setPosition(1);
     }
 
 

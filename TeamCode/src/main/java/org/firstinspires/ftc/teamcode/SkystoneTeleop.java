@@ -22,6 +22,7 @@ public class SkystoneTeleop extends LinearOpMode{
     private OmniDriveTrain driveTrain;
     private SkyStoneIntake intake;
     private FoundationArm foundation;
+    private SkyStoneStacker stacker;
 //    private SkyStoneStacker blockArm;
     BNO055IMU imu;
 
@@ -40,6 +41,7 @@ public class SkystoneTeleop extends LinearOpMode{
         this.driveTrain = new OmniDriveTrain(this.hardwareMap, this.telemetry);
         this.intake = new SkyStoneIntake(this.hardwareMap, this.telemetry);
         this.foundation = new FoundationArm(this.hardwareMap, this.telemetry);
+        this.stacker = new SkyStoneStacker(this.hardwareMap, this.telemetry);
 //        this.blockArm = new SkyStoneStacker(this.hardwareMap, this.telemetry);
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
@@ -100,17 +102,54 @@ public class SkystoneTeleop extends LinearOpMode{
 //            }
 
 
-            if (gamepad2.a){
+            if(gamepad2.left_trigger > 0){
+                this.intake.down();
+                telemetry.addData("Second Servo Position", intake.intakeRotate.getPosition());
+                telemetry.update();
+            }
+            if(gamepad2.right_trigger > 0){
+                this.intake.up();
+                telemetry.addData("Second Servo Position", intake.intakeRotate.getPosition());
+                telemetry.update();
+            }
+
+            if (gamepad2.y){
                 this.foundation.foundationDown();
             }
-            if (gamepad2.y){
+            if (gamepad2.a){
                 this.foundation.foundationUp();
             }
 
-            telemetry.addData("Servo Position", foundation.foundationArm.getPosition());
-            telemetry.addData("Heading:", currentHeading.name());
+            if (gamepad2.dpad_down){
+                this.stacker.close();
+            }
 
-            telemetry.update();
+            if (gamepad2.dpad_up){
+                this.stacker.open();
+            }
+
+            if(gamepad2.dpad_left){
+               // if(this.stacker.positioner.getPosition() <= 90){
+                    this.stacker.positionerLeft();
+               // }
+            }
+            if(gamepad2.dpad_right){
+               // if(this.stacker.positioner.getPosition() >= 0){
+                    this.stacker.positionerRight();
+               // }
+            }
+
+            if(gamepad2.right_stick_y > .25){
+                this.stacker.raiseArm();
+            }else if(gamepad2.right_stick_y < -.25){
+                this.stacker.lowerArm();
+            }else{
+                this.stacker.stop();
+            }
+
+
+
+//            telemetry.update();
             xval = gamepad1.left_stick_x;
             yval = gamepad1.left_stick_y;
 
