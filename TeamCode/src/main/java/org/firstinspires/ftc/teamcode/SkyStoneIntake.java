@@ -34,6 +34,8 @@ public class SkyStoneIntake {
     }
 
     public void startCollecting () {
+        this.down();
+
         this.leftArmMotor.setPower(MOTOR_POWER);
         this.rightArmMotor.setPower(MOTOR_POWER);
     }

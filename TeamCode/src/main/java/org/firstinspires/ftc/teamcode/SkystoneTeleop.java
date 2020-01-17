@@ -2,12 +2,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
+
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
@@ -23,6 +18,7 @@ public class SkystoneTeleop extends LinearOpMode{
     private SkyStoneIntake intake;
     private FoundationArm foundation;
     private SkyStoneStacker stacker;
+
 //    private SkyStoneStacker blockArm;
     BNO055IMU imu;
 
@@ -57,8 +53,8 @@ public class SkystoneTeleop extends LinearOpMode{
         imu = hardwareMap.get(BNO055IMU.class, "imu");
 
         imu.initialize(parameters);
-
-        telemetry.addData("Mode", "calibrating...");
+//
+//        telemetry.addData("Mode", "calibrating...");
         telemetry.update();
 
         startOrientation = imu.getAngularOrientation();
@@ -72,6 +68,8 @@ public class SkystoneTeleop extends LinearOpMode{
         while (opModeIsActive()) {
 
 
+
+
             double xval = 0;
             double yval = 0;
 
@@ -81,71 +79,87 @@ public class SkystoneTeleop extends LinearOpMode{
 
 //
 
+            if(gamepad1.left_trigger > 0.1){
+                telemetry.addData("RESETTING", "");
+                imu.initialize(parameters);
+                telemetry.clear();
+                telemetry.addData("GYRO RESET $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$", "");
+                telemetry.update();
+            }
+
 
 
             if (gamepad2.right_bumper) {
-                telemetry.addData("Right Bumper Pressed", "True");
-                telemetry.update();
-                this.intake.startCollecting();
+                this.intake.down();
             }else if(gamepad2.left_bumper){
-                this.intake.spitOut();
-            } else{
-                this.intake.stopCollecting();
-                telemetry.addData("Right Bumper Pressed", "False");
-                telemetry.update();
+                this.intake.up();
             }
 
-//            if(gamepad2.dpad_up){
-//                this.blockArm.raiseSkyStone();
-//            } else if(gamepad2.dpad_down){
-//                this.blockArm.dropSkyStone();
-//            }
+            if(gamepad2.dpad_up){
+                this.stacker.raiseArm();
+//                telemetry.addData("Moving", stacker.levelerMotor.getCurrentPosition());
+//                telemetry.update();
+            } else if(gamepad2.dpad_down){
+                this.stacker.lowerArm();
+//                telemetry.addData("Moving", stacker.levelerMotor.getCurrentPosition());
+//                telemetry.update();
+            } else{
+                stacker.stop();
+            }
 
 
             if(gamepad2.left_trigger > 0){
-                this.intake.down();
-                telemetry.addData("Second Servo Position", intake.intakeRotate.getPosition());
-                telemetry.update();
-            }
-            if(gamepad2.right_trigger > 0){
-                this.intake.up();
-                telemetry.addData("Second Servo Position", intake.intakeRotate.getPosition());
-                telemetry.update();
+//                telemetry.addData("Right Bumper Pressed", "True");
+//                telemetry.update();
+                this.intake.startCollecting();
+
+
+            }else if(gamepad2.right_trigger > 0){
+                this.intake.spitOut();
+            }else {
+                this.intake.stopCollecting();
+//                telemetry.addData("Right Bumper Pressed", "False");
+//                telemetry.update();
             }
 
             if (gamepad2.y){
                 this.foundation.foundationDown();
+                this.foundation.foundationDown1();
             }
             if (gamepad2.a){
                 this.foundation.foundationUp();
+                this.foundation.foundationUp1();
             }
 
-            if (gamepad2.dpad_down){
+            if (gamepad2.b){
                 this.stacker.close();
             }
 
-            if (gamepad2.dpad_up){
+            if (gamepad2.x){
                 this.stacker.open();
             }
 
             if(gamepad2.dpad_left){
-               // if(this.stacker.positioner.getPosition() <= 90){
                     this.stacker.positionerLeft();
-               // }
-            }
-            if(gamepad2.dpad_right){
-               // if(this.stacker.positioner.getPosition() >= 0){
-                    this.stacker.positionerRight();
-               // }
+            }else if(gamepad2.dpad_right){
+                this.stacker.positionerRight();
+            }else {
+                this.stacker.stopPositioner();
             }
 
-            if(gamepad2.right_stick_y > .25){
-                this.stacker.raiseArm();
-            }else if(gamepad2.right_stick_y < -.25){
-                this.stacker.lowerArm();
-            }else{
-                this.stacker.stop();
+            if(gamepad1.right_trigger > 0.5){
+                this.driveTrain.GO_SLOW = true;
+                telemetry.addData("Slow Mode On ==================================================================================", "");
+                telemetry.update();
+
             }
+            if(gamepad1.right_trigger <0.5){
+                this.driveTrain.GO_SLOW = false;
+                telemetry.addData("Slow Mode Off", "");
+                telemetry.update();
+            }
+
+
 
 
 
@@ -154,16 +168,16 @@ public class SkystoneTeleop extends LinearOpMode{
             yval = gamepad1.left_stick_y;
 
             switch (currentHeading){
-                case EAST:
+                case WEST:
 
                     xval = -gamepad1.left_stick_y;
                     yval = gamepad1.left_stick_x;
                     break;
-                case WEST:
+                case EAST:
                     xval = gamepad1.left_stick_y;
                     yval = -gamepad1.left_stick_x;
                     break;
-                case SOUTH:
+                case NORTH:
                     xval = -gamepad1.left_stick_x;
                     yval = -gamepad1.left_stick_y;
                     break;
@@ -179,41 +193,29 @@ public class SkystoneTeleop extends LinearOpMode{
 
             } else if (Math.abs(xval)>0.1 || Math.abs(yval)>0.1) {
                 if ((xval != 0 && Math.abs(yval) > 0) || Math.abs(yval / xval) > 0.5) {
-                    telemetry.addData("Move Forward/back", yval);
+//                    telemetry.addData("Move Forward/back", yval);
                     int directionFB = yval > 0 ? 1 : -1;
                     this.driveTrain.move(yval, directionFB);
                 } else if (Math.abs(xval) > 0) {
-                    telemetry.addData("Move Sideways", xval);
+//                    telemetry.addData("Move Sideways", xval);
                     int directionCrab = xval > 0 ? 1 : -1;
                     this.driveTrain.crab(xval, directionCrab);
 
                 }
             }
             if(Math.abs(xval2) > 0.1){
-                telemetry.addData("Turn", xval2);
+//                telemetry.addData("Turn", xval2);
                 telemetry.update();
                 int directionTurn = xval2 > 0 ? 1 : -1;
                 this.driveTrain.turn(xval2, directionTurn);
             }
 
 
-//            float x = orientation.firstAngle;
-//            float y = orientation.secondAngle;
-//            float z = orientation.thirdAngle;
 
-//            telemetry.addData("Orientation: ","x=%f,y=%f,z=%f",x,y,z);
-//            telemetry.update();
 
             idle();
 
-//            } else if (Math.abs(xval) > 0.1 || Math.abs(yval) > 0.1){
-//                if (yval > 0) {
-//                    telemetry.addData("Move  Forward/Back", yval);
-//                    this.driveTrain.move(yval, 1);
-//                } else if (Math.abs(yval) < 0){
-//                    this.driveTrain.move(yval, -1);
-//                }
-//            }
+
             telemetry.update();
             Thread.sleep(50);
 
@@ -222,12 +224,12 @@ public class SkystoneTeleop extends LinearOpMode{
 
     public Heading getHeading(){
         Orientation currentOrientation = imu.getAngularOrientation();
-        telemetry.addData("Orientation:","x: %f; y: %f, z: %f",currentOrientation.firstAngle,currentOrientation.secondAngle,currentOrientation.thirdAngle);
+//        telemetry.addData("Orientation:","x: %f; y: %f, z: %f",currentOrientation.firstAngle,currentOrientation.secondAngle,currentOrientation.thirdAngle);
         telemetry.update();
 
         Heading heading = Heading.NORTH;
-
-        telemetry.addData("Angle:", currentOrientation.firstAngle);
+//
+//        telemetry.addData("Angle:", currentOrientation.firstAngle);
         telemetry.update();
 
         if(currentOrientation.firstAngle > 45 && currentOrientation.firstAngle <= 135){
