@@ -22,7 +22,7 @@ public class FoundationArm {
     }
 
     public void foundationUp(){
-        foundationArm.setPosition(0);
+        foundationArm.setPosition(.2);
     }
 
     public void foundationDown1(){
@@ -30,7 +30,7 @@ public class FoundationArm {
     }
 
     public void foundationUp1(){
-        foundationArm1.setPosition(0);
+        foundationArm1.setPosition(.2);
     }
 
 

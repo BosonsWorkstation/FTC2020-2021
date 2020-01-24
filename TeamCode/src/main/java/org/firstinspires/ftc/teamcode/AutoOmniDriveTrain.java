@@ -56,6 +56,20 @@ public class AutoOmniDriveTrain extends OmniDriveTrain {
         int currentPosition = 0;
         this.setMoveMotorDirection(direction);
         boolean done = false;
+//        if(direction > 0 && frontRightWheel.getCurrentPosition() < targetValue){
+//            frontRightWheel.setPower(.4);
+//            frontLeftWheel.setPower(.4);
+//            backRightWheel.setPower(.4);
+//            backLeftWheel.setPower(.4);
+//            Thread.sleep(5);
+//        }
+//        if(direction < 0 && frontRightWheel.getCurrentPosition() > targetValue){
+//            frontRightWheel.setPower(-0.4);
+//            frontLeftWheel.setPower(-0.4);
+//            backRightWheel.setPower(-0.4);
+//            backLeftWheel.setPower(-0.4);
+//            Thread.sleep(5);
+//        }
         while(!done){
 
             frontRightWheel.setPower(.4);
@@ -63,8 +77,6 @@ public class AutoOmniDriveTrain extends OmniDriveTrain {
             backRightWheel.setPower(.4);
             backLeftWheel.setPower(.4);
             Thread.sleep(5);
-//            currentPositionTel.setValue("%d",currentPosition);
-//            telemetry.update();
             if((direction > 0 && frontRightWheel.getCurrentPosition() < targetValue) ||
                 (direction < 0 && frontRightWheel.getCurrentPosition() > targetValue)){
                 done = true;

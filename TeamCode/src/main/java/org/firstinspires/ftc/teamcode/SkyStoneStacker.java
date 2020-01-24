@@ -32,13 +32,16 @@ public class SkyStoneStacker {
 //        levelerMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         positioner = hardwareMap.dcMotor.get("Positioner");
         grabber = hardwareMap.servo.get("Grabber");
+//        this.initArm();
         this.telemetry = telemetry;
     }
 
 
     private void initArm(){
-        levelerMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        levelerMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         levelerMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        positioner.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        positioner.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.stop();
         this.armInitialized = true;
     }
@@ -79,11 +82,16 @@ public class SkyStoneStacker {
             levelerMotor.setPower(MAX_POWER);
     }
 
+
     public void lowerArm(){
             levelerMotor.setPower(MIN_POWER);
     }
     public void stop(){
         levelerMotor.setPower(0);
+    }
+
+    public void positionerStop(){
+        positioner.setPower(0);
     }
 
 }

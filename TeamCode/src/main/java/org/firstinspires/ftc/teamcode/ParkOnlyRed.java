@@ -33,7 +33,7 @@ public class ParkOnlyRed extends LinearOpMode {
 
 //                this.autoOmni.crabbingDistance(-40);
 
-                this.autoOmni.crabbingDistance(10);
+                this.autoOmni.moveDistance(20);
 
             }
 

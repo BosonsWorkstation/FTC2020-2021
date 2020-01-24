@@ -122,11 +122,11 @@ public class SkystoneTeleop extends LinearOpMode{
 //                telemetry.update();
             }
 
-            if (gamepad2.y){
+            if (gamepad2.a){
                 this.foundation.foundationDown();
                 this.foundation.foundationDown1();
             }
-            if (gamepad2.a){
+            if (gamepad2.y){
                 this.foundation.foundationUp();
                 this.foundation.foundationUp1();
             }
@@ -238,6 +238,7 @@ public class SkystoneTeleop extends LinearOpMode{
             heading = Heading.SOUTH;
         }else if(currentOrientation.firstAngle < -45 && currentOrientation.firstAngle > -135){
             heading = Heading.WEST;
+
         }
         //if change from start > 90 and < 180 heading is east
         //if change > 180 and < 270 south

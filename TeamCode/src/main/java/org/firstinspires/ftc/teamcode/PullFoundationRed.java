@@ -5,13 +5,13 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Autonomous(name = "Pull Foundation Red", group = "Linear Opmode")
 public class PullFoundationRed extends LinearOpMode {
-    private AutoOmniDriveTrain autoOmni;
+    private AutoOmniDriveTrain2 autoOmni;
 //    private SkyStoneIntake intake;
     private FoundationArm foundation;
     private static final long INITIAL_WAIT = 1000;
 
     public void runOpMode() throws InterruptedException {
-        this.autoOmni = new AutoOmniDriveTrain(this.hardwareMap, this.telemetry);
+        this.autoOmni = new AutoOmniDriveTrain2(this.hardwareMap, this.telemetry);
         this.autoOmni.initMotors();
 //        this.intake = new SkyStoneIntake(this.hardwareMap, this.telemetry);
         this.foundation = new FoundationArm(this.hardwareMap, this.telemetry);
@@ -46,12 +46,12 @@ public class PullFoundationRed extends LinearOpMode {
 
 
 
-                this.autoOmni.crabbingDistance(60);
-                Thread.sleep(200);
-                this.foundation.foundationUp();
-                this.foundation.foundationUp1();
-                Thread.sleep(500);
                 this.autoOmni.crabbingDistance(-60);
+                Thread.sleep(200);
+                this.foundation.foundationDown1();
+                this.foundation.foundationDown();
+                Thread.sleep(500);
+                this.autoOmni.crabbingDistance(60);
 
 
             }

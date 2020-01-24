@@ -47,6 +47,10 @@ public class OmniDriveTrain{
         this.backRightWheel = hardwareMap.dcMotor.get("Back_Right_Wheel");
         this.frontLeftWheel = hardwareMap.dcMotor.get("Front_Left_Wheel");
         this.frontRightWheel = hardwareMap.dcMotor.get("Front_Right_Wheel");
+        this.backLeftWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        this.backRightWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        this.frontLeftWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        this.frontRightWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void initializeGyro(HardwareMap hardwareMap, Telemetry telemetry){
