@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 public class ParkOnlyRed extends LinearOpMode {
     private AutoOmniDriveTrain autoOmni;
     private SkyStoneIntake intake;
-    private static final long INITIAL_WAIT = 1000;
+    private static final long INITIAL_WAIT = 100;
 
     public void runOpMode() throws InterruptedException {
         this.autoOmni = new AutoOmniDriveTrain(this.hardwareMap, this.telemetry);
