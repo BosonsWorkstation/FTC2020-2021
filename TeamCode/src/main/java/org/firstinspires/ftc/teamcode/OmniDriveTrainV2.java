@@ -32,11 +32,17 @@ public class OmniDriveTrainV2 {
     double reset_angle = 0;
     private double correction_factor = 0;
 
+    private Telemetry.Item leftFrontTelemetry;
+    private Telemetry.Item rightFrontTelemetry;
+    private Telemetry.Item leftBackTelemetry;
+    private Telemetry.Item rightBackTelemetry;
+    private Telemetry.Item usePowerTelemetry;
+
 
     public enum DirectionEnum{
         NORTH(90), SOUTH(-90), EAST(180), WEST(0);
         private double correction;
-        private DirectionEnum(double correction) {
+        DirectionEnum(double correction) {
             this.correction = correction;
         }
         public double getCorrection() {
@@ -49,6 +55,11 @@ public class OmniDriveTrainV2 {
         this.initializeGyro(hardwareMap, telemetry);
         this.initializeMotors(hardwareMap, telemetry);
         this.correction_factor = direction.getCorrection();
+        this.leftFrontTelemetry = telemetry.addData("LF Power", 0);
+        this.rightFrontTelemetry = telemetry.addData("RF Power", 0);
+        this.leftBackTelemetry = telemetry.addData("LF Power", 0);
+        this.rightBackTelemetry = telemetry.addData("RB Power", 0);
+        this.usePowerTelemetry = telemetry.addData("usePower", 0);
     }
 
     public void initializeMotors(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -130,6 +141,7 @@ public class OmniDriveTrainV2 {
     }
 
     public void drive(double moveValue, double crabValue, double turnValue) {
+
         double Protate = turnValue/4;
         double stick_x = crabValue * Math.sqrt(Math.pow(1-Math.abs(Protate), 2)/2); //Accounts for Protate when limiting magnitude to be less than 1
         double stick_y = moveValue * Math.sqrt(Math.pow(1-Math.abs(Protate), 2)/2);

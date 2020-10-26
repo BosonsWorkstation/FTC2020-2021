@@ -15,9 +15,6 @@ import android.graphics.drawable.GradientDrawable;
 @TeleOp(name = "SkyStone Teleop", group = "Linear Opmode")
 public class SkystoneTeleop extends LinearOpMode{
     private OmniDriveTrain driveTrain;
-    private SkyStoneIntake intake;
-    private FoundationArm foundation;
-    private SkyStoneStacker stacker;
 
 //    private SkyStoneStacker blockArm;
     BNO055IMU imu;
@@ -34,10 +31,7 @@ public class SkystoneTeleop extends LinearOpMode{
 
     @Override
     public void runOpMode()   throws InterruptedException {
-        this.driveTrain = new OmniDriveTrain(this.hardwareMap, this.telemetry);
-        this.intake = new SkyStoneIntake(this.hardwareMap, this.telemetry);
-        this.foundation = new FoundationArm(this.hardwareMap, this.telemetry);
-        this.stacker = new SkyStoneStacker(this.hardwareMap, this.telemetry);
+
 //        this.blockArm = new SkyStoneStacker(this.hardwareMap, this.telemetry);
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
@@ -89,63 +83,9 @@ public class SkystoneTeleop extends LinearOpMode{
 
 
 
-            if (gamepad2.right_bumper) {
-                this.intake.down();
-            }else if(gamepad2.left_bumper){
-                this.intake.up();
-            }
-
-            if(gamepad2.dpad_up){
-                this.stacker.raiseArm();
-//                telemetry.addData("Moving", stacker.levelerMotor.getCurrentPosition());
-//                telemetry.update();
-            } else if(gamepad2.dpad_down){
-                this.stacker.lowerArm();
-//                telemetry.addData("Moving", stacker.levelerMotor.getCurrentPosition());
-//                telemetry.update();
-            } else{
-                stacker.stop();
-            }
 
 
-            if(gamepad2.left_trigger > 0){
-//                telemetry.addData("Right Bumper Pressed", "True");
-//                telemetry.update();
-                this.intake.startCollecting();
 
-
-            }else if(gamepad2.right_trigger > 0){
-                this.intake.spitOut();
-            }else {
-                this.intake.stopCollecting();
-//                telemetry.addData("Right Bumper Pressed", "False");
-//                telemetry.update();
-            }
-
-            if (gamepad2.a){
-                this.foundation.foundationDown();
-                this.foundation.foundationDown1();
-            }
-            if (gamepad2.y){
-                this.foundation.foundationUp();
-                this.foundation.foundationUp1();
-            }
-
-            if (gamepad2.b){
-                this.stacker.close();
-            }
-
-            if (gamepad2.x){
-                this.stacker.open();
-            }
-
-            if(gamepad2.dpad_left){
-                    this.stacker.positionerLeft();
-            }else if(gamepad2.dpad_right){
-                this.stacker.positionerRight();
-            }else {
-                this.stacker.stopPositioner();
-            }
 
             if(gamepad1.right_trigger > 0.5){
                 this.driveTrain.GO_SLOW = true;
