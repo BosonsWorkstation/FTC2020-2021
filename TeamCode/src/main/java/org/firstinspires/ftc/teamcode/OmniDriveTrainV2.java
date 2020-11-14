@@ -68,7 +68,7 @@ public class OmniDriveTrainV2 {
         this.frontLeftWheel = hardwareMap.dcMotor.get("Front_Left_Wheel");
         this.frontRightWheel = hardwareMap.dcMotor.get("Front_Right_Wheel");
         frontLeftWheel.setDirection(DcMotor.Direction.REVERSE);
-        backLeftWheel.setDirection(DcMotor.Direction.REVERSE);
+        backLeftWheel.setDirection(DcMotor.Direction.REVERSE); 
         frontRightWheel.setDirection(DcMotor.Direction.FORWARD);
         backRightWheel.setDirection(DcMotor.Direction.FORWARD);
         frontLeftWheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
