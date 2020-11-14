@@ -15,6 +15,10 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class TestControl extends LinearOpMode {
     private static final OmniDriveTrainV2.DirectionEnum direction = OmniDriveTrainV2.DirectionEnum.SOUTH;
     private OmniDriveTrainV2 driveTrain2;
+    DcMotor backRightWheel;
+    DcMotor backLeftWheel;
+    DcMotor frontRightWheel;
+    DcMotor frontLeftWheel;
 
 
     @Override
