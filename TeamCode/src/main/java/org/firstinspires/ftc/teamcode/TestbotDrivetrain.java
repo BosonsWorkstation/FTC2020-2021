@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -15,12 +16,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 
-public class OmniDriveTrainV2 {
+public class TestbotDrivetrain {
     protected DcMotor backRightWheel;
     protected DcMotor backLeftWheel;
     protected DcMotor frontRightWheel;
     protected DcMotor frontLeftWheel;
-
+    protected ColorSensor colorSensor;
+    protected Servo colorSensorArm;
+    private double colorSensorPosition;
+    private double colorSensorChange;
 
 
     private static BNO055IMU imu;
@@ -39,6 +43,7 @@ public class OmniDriveTrainV2 {
     private Telemetry.Item usePowerTelemetry;
 
 
+
     public enum DirectionEnum{
         NORTH(90), SOUTH(-90), EAST(180), WEST(0);
         private double correction;
@@ -50,10 +55,12 @@ public class OmniDriveTrainV2 {
         }
     }
 
-    public OmniDriveTrainV2(HardwareMap hardwareMap, Telemetry telemetry, DirectionEnum direction) {
+    public TestbotDrivetrain(HardwareMap hardwareMap, Telemetry telemetry, DirectionEnum direction) {
+
         this.telemetry = telemetry;
         this.initializeGyro(hardwareMap, telemetry);
         this.initializeMotors(hardwareMap, telemetry);
+        this.initializeColor(hardwareMap, telemetry);
         this.correction_factor = direction.getCorrection();
         this.leftFrontTelemetry = telemetry.addData("LF Power", frontLeftWheel.getPower());
         this.rightFrontTelemetry = telemetry.addData("RF Power", frontRightWheel.getPower());
@@ -94,6 +101,8 @@ public class OmniDriveTrainV2 {
         }
         gyroInitialized = true;
     }
+
+
 
     public void stop(){
 
@@ -140,6 +149,26 @@ public class OmniDriveTrainV2 {
 
     }
 
+    public void initializeColor (HardwareMap hardwareMap, Telemetry telemetry){
+        colorSensor = hardwareMap.colorSensor.get("color_sensor");
+        colorSensorArm.setPosition(1.00);
+        colorSensorPosition = colorSensorArm.getPosition();
+
+    }
+    public void detectRingHeight(){
+        if(colorSensor.red() < 100){
+
+            colorSensorChange = colorSensorPosition - 0.1;
+            colorSensorArm.setPosition(colorSensorChange);
+
+        }
+        if (colorSensor.red() > 100){
+            colorSensorArm.setPosition(1);
+
+        }
+    }
+
+
     public void drive(double moveValue, double crabValue, double turnValue) {
 
         double Protate = turnValue/4;
@@ -183,6 +212,9 @@ public class OmniDriveTrainV2 {
         Px = Math.sqrt(Math.pow(stick_x, 2) + Math.pow(stick_y, 2)) * (Math.sin(theta + Math.PI / 4));
         Py = Math.sqrt(Math.pow(stick_x, 2) + Math.pow(stick_y, 2)) * (Math.sin(theta - Math.PI / 4));
 
+
+        telemetry.addData("RING DETECTED", colorSensor.red());
+        telemetry.addData("Color Sensor Servo", colorSensorArm.getPosition());
         telemetry.addData("Stick_X", stick_x);
         telemetry.addData("Stick_Y", stick_y);
         telemetry.addData("Magnitude",  Math.sqrt(Math.pow(stick_x, 2) + Math.pow(stick_y, 2)));
@@ -190,6 +222,7 @@ public class OmniDriveTrainV2 {
         telemetry.addData("Back Left", Px - Protate);
         telemetry.addData("Back Right", Py + Protate);
         telemetry.addData("Front Right", Px + Protate);
+
 
         frontLeftWheel.setPower(Py - Protate);
         backLeftWheel.setPower(Px - Protate);
@@ -199,4 +232,8 @@ public class OmniDriveTrainV2 {
         telemetry.update();
     }
 
+
+    public void ringHeight (){
+
+    }
 }

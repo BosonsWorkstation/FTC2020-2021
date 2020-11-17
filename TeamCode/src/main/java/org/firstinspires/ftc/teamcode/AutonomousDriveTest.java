@@ -5,10 +5,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 
-@Autonomous(name="TestAutonomous3", group = "Linear OpMode")
-public class AutonomousDriveTest extends LinearOpMode{
+public class AutonomousDriveTest{
     DcMotor frontRightWheel;
     DcMotor frontLeftWheel;
     DcMotor backRightWheel;
@@ -16,9 +18,8 @@ public class AutonomousDriveTest extends LinearOpMode{
     private OmniDriveTrain driveTrain;
     private final AutoOmniDriveTrain.DirectionEnum direction = AutoOmniDriveTrain.DirectionEnum.NORTH;
 
-    @Override
-    public void runOpMode() throws InterruptedException {
-        this.driveTrain = new OmniDriveTrain(this.hardwareMap, this.telemetry);
+    public AutonomousDriveTest(HardwareMap hardwareMap, Telemetry telemetry) {
+//        this.driveTrain = new OmniDriveTrain(this.hardwareMap, this.telemetry);
 
         this.frontRightWheel = hardwareMap.dcMotor.get("Front_Right_Wheel");
         this.frontLeftWheel = hardwareMap.dcMotor.get("Front_Left_Wheel");
@@ -26,48 +27,42 @@ public class AutonomousDriveTest extends LinearOpMode{
         this.backRightWheel = hardwareMap.dcMotor.get("Back_Right_Wheel");
     }
 
-    public void autoDrive() {
+    public void autoDrive(int distance) {
 
-            frontRightWheel.setDirection(DcMotor.Direction.FORWARD);
-            frontLeftWheel.setDirection(DcMotor.Direction.FORWARD);
-            backLeftWheel.setDirection(DcMotor.Direction.REVERSE);
-            backRightWheel.setDirection(DcMotor.Direction.REVERSE);
+        frontRightWheel.setDirection(DcMotor.Direction.FORWARD);
+        frontLeftWheel.setDirection(DcMotor.Direction.FORWARD);
+        backRightWheel.setDirection(DcMotor.Direction.REVERSE);
+        backLeftWheel.setDirection(DcMotor.Direction.REVERSE);
 
-            frontRightWheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            frontLeftWheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            backRightWheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            backRightWheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-            frontRightWheel.setTargetPosition(50);
-            frontLeftWheel.setTargetPosition(50);
-            backRightWheel.setTargetPosition(50);
-            backLeftWheel.setTargetPosition(50);
+        frontRightWheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeftWheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightWheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeftWheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-            frontRightWheel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            frontLeftWheel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            backRightWheel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            backLeftWheel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRightWheel.setTargetPosition(distance);
+        frontLeftWheel.setTargetPosition(distance);
+        backRightWheel.setTargetPosition(distance);
+        backLeftWheel.setTargetPosition(distance);
 
-            waitForStart();
+        frontRightWheel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontLeftWheel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRightWheel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeftWheel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            frontRightWheel.setPower(.25);
-            frontLeftWheel.setPower(.25);
-            backRightWheel.setPower(.25);
-            backLeftWheel.setPower(.25);
-            while (opModeIsActive() && frontRightWheel.isBusy()) {
-                telemetry.addData("FR Current Position", frontRightWheel.getCurrentPosition());
-                telemetry.addData("FL Current Position", frontLeftWheel.getCurrentPosition());
-                telemetry.addData("BR Current Position", backRightWheel.getCurrentPosition());
-                telemetry.addData("BL Current Position", backLeftWheel.getCurrentPosition());
-                telemetry.update();
-                idle();
-            }
-            frontRightWheel.setPower(0);
-            frontRightWheel.setPower(0);
-            backRightWheel.setPower(0);
-            backLeftWheel.setPower(0);
-            resetStartTime();
+    }
 
+    public void drive() {
+        frontRightWheel.setPower(.25);
+        frontLeftWheel.setPower(.25);
+        backRightWheel.setPower(.25);
+        backLeftWheel.setPower(.25);
+
+        frontRightWheel.setPower(0);
+        frontLeftWheel.setPower(0);
+        backRightWheel.setPower(0);
+        backLeftWheel.setPower(0);
+    }
 //        frontRightWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 //        frontLeftWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 //        backRightWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -75,7 +70,7 @@ public class AutonomousDriveTest extends LinearOpMode{
 
 
         }
-    }
+
 
 
 
